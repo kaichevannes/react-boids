@@ -10,42 +10,53 @@ import topLevelAwait from 'vite-plugin-top-level-await'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    libInjectCss(),
-    dts({
-      tsconfigPath: resolve(__dirname, "tsconfig.lib.json"),
-    }),
-    wasm(),
-    topLevelAwait()
-  ],
-  build: {
-    copyPublicDir: false,
-    lib: {
-      entry: resolve(__dirname, 'lib/main.ts'),
-      formats: ['es']
+    base: './',
+    plugins: [
+        react(),
+        libInjectCss(),
+        dts({
+            tsconfigPath: resolve(__dirname, "tsconfig.lib.json"),
+        }),
+        wasm(),
+        topLevelAwait()
+    ],
+    server: {
+        headers: {
+            'Cross-Origin-Opener-Policy': 'same-origin',
+            'Cross-Origin-Embedder-Policy': 'require-corp',
+        },
     },
-    rollupOptions: {
-      external: ['react', 'react/jsx-runtime'],
-      input: Object.fromEntries(
-        glob.sync('lib/**/*.{ts,tsx}', {
-          ignore: ["lib/**/*.d.ts"],
-        }).map(file => [
-          // The name of the entry point
-          // lib/nested/foo.ts becomes nested/foo
-          relative(
-            'lib',
-            file.slice(0, file.length - extname(file).length)
-          ),
-          // The absolute path to the entry file
-          // lib/nested/foo.ts becomes /project/lib/nested/foo.ts
-          fileURLToPath(new URL(file, import.meta.url))
-        ])
-      ),
-      output: {
-        assetFileNames: 'assets/[name][extname]',
-        entryFileNames: '[name].js',
-      }
+    build: {
+        copyPublicDir: false,
+        lib: {
+            entry: resolve(__dirname, 'lib/main.ts'),
+            formats: ['es']
+        },
+        rollupOptions: {
+            external: ['react', 'react/jsx-runtime'],
+            input: Object.fromEntries(
+                glob.sync('lib/**/*.{ts,tsx}', {
+                    ignore: ["lib/**/*.d.ts"],
+                }).map(file => [
+                    // The name of the entry point
+                    // lib/nested/foo.ts becomes nested/foo
+                    relative(
+                        'lib',
+                        file.slice(0, file.length - extname(file).length)
+                    ),
+                    // The absolute path to the entry file
+                    // lib/nested/foo.ts becomes /project/lib/nested/foo.ts
+                    fileURLToPath(new URL(file, import.meta.url))
+                ])
+            ),
+            output: {
+                assetFileNames: 'assets/[name][extname]',
+                entryFileNames: '[name].js',
+                format: 'es',
+            }
+        }
+    },
+    worker: {
+        format: 'es',
     }
-  }
 })
