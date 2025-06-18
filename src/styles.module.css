@@ -1,0 +1,5 @@
+.boidsWrapper {
+    display: grid;
+    place-content: center;
+    height: 800px;
+}

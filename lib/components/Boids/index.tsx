@@ -1,34 +1,127 @@
 import styles from './styles.module.css'
 import React from 'react'
 
-import init, { initThreadPool, Universe, Preset } from '@kaichevannes/wasm-boids'
-// import init, { initThreadPool, init_panic_hook } from '@kaichevannes/wasm-boids'
-// import init, { Universe, Preset } from '@kaichevannes/wasm-boids'
+// import init, { initThreadPool, Universe, Preset } from '@kaichevannes/wasm-boids'
+import init, { initThreadPool, Universe, Builder, Preset } from '@kaichevannes/wasm-boids'
+
 
 export function Boids() {
-    React.useEffect(() => {
-    }, []);
+    // Initialisation refs
+    const wasmInitialised = React.useRef(false);
+    const universe = React.useRef<Universe | null>(null);
+    const memory = React.useRef<WebAssembly.Memory | null>(null);
 
-    return <div className={styles.div} >
-        Hello from Boids
-        <button onClick={async () => {
+    // Canvas
+    const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+    const [canvasSize, setCanvasSize] = React.useState(500);
+
+    const [playAnimation, setPlayAnimation] = React.useState(true);
+    const playAnimationRef = React.useRef(playAnimation);
+
+    React.useEffect(() => {
+        playAnimationRef.current = playAnimation;
+        if (playAnimation) {
+            requestAnimationFrame(render);
+        }
+    }, [playAnimation]);
+
+    function render() {
+        if (!memory.current || !universe.current || !canvasRef.current) {
+            return;
+        }
+
+        const FLOATS_PER_BOID = 6;
+        const boidsPtr = universe.current.get_boids_pointer();
+        const data = new Float32Array(memory.current.buffer, boidsPtr, universe.current.get_number_of_boids() * FLOATS_PER_BOID);
+        let boids = [];
+        for (let i = 0; i < universe.current.get_number_of_boids(); i++) {
+            const offset = i * FLOATS_PER_BOID;
+
+            const boid = {
+                x: data[offset],
+                y: data[offset + 1],
+                vx: data[offset + 2],
+                vy: data[offset + 3],
+            };
+
+            boids.push(boid);
+        }
+
+        const size = canvasSize;
+        const ctx = canvasRef.current.getContext("2d");
+
+        if (!ctx) {
+            return;
+        }
+
+        ctx.clearRect(0, 0, size, size);
+        ctx.fillStyle = "black";
+        const universeSize = universe.current.get_size();
+        const triangleSize = universeSize / 15;
+        boids.forEach((b) => {
+            let x = (b.x / universeSize) * size;
+            let y = (b.y / universeSize) * size;
+            const angle = Math.atan2(b.vy, b.vx);
+
+            ctx.setTransform(
+                Math.cos(angle),
+                Math.sin(angle),
+                -Math.sin(angle),
+                Math.cos(angle),
+                x,
+                y,
+            )
+
+            ctx.beginPath();
+            ctx.moveTo(triangleSize, 0);
+            ctx.lineTo(-triangleSize, triangleSize);
+            ctx.lineTo(-triangleSize, -triangleSize);
+            ctx.closePath();
+            ctx.fill();
+
+        });
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        universe.current.tick();
+        if (playAnimationRef.current) {
+            requestAnimationFrame(render)
+        }
+    }
+
+    React.useEffect(() => {
+        if (wasmInitialised.current) {
+            console.log("returning");
+            return;
+        }
+        wasmInitialised.current = true;
+
+        (async () => {
             let wasm = await init();
+            memory.current = wasm.memory;
             await initThreadPool(navigator.hardwareConcurrency);
 
-            const universe = Universe.build_from_preset(Preset.Basic);
-            const number_of_boids = universe.get_number_of_boids();
-            console.log(`number_of_boids: ${number_of_boids}`);
-            const boidsPtr = universe.get_boids_pointer();
-            console.log(`boidsPtr: ${boidsPtr}`);
-            console.log(`wasm.memory.buffer: ${wasm.memory.buffer}`);
-            const bytes = new Uint8Array(wasm.memory.buffer, 0, 64); // first 64 bytes
-            console.log([...bytes]); // or console.table(bytes)
-            const boids1 = new Float32Array(wasm.memory.buffer, boidsPtr, number_of_boids * 6);
-            console.log(boids1);
-            universe.tick();
-            const boids2 = new Float32Array(wasm.memory.buffer, boidsPtr, number_of_boids * 6);
-            console.log(boids2);
-        }
-        }>Run once</button>
-    </div >
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+
+            const observer = new ResizeObserver(() => {
+                setCanvasSize(canvas.clientWidth);
+            });
+            observer.observe(canvas);
+
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
+
+            universe.current = Builder.from_preset(Preset.Basic).number_of_boids(100).build();
+
+            requestAnimationFrame(render)
+        })();
+
+    }, []);
+
+    return (
+        <div className={styles.canvasWrapper}>
+            <canvas className={styles.canvas} ref={canvasRef} />
+            <button onClick={() => setPlayAnimation(!playAnimation)}>{playAnimation ? "Pause" : "Play"}</button>
+        </div>
+    )
 }
