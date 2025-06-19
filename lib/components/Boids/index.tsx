@@ -1,8 +1,8 @@
 import styles from './styles.module.css'
 import React from 'react'
+import { Slider } from 'radix-ui';
 
-// import init, { initThreadPool, Universe, Preset } from '@kaichevannes/wasm-boids'
-import init, { initThreadPool, Universe, Builder, Preset } from '@kaichevannes/wasm-boids'
+import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from '@kaichevannes/wasm-boids'
 
 
 export function Boids() {
@@ -15,15 +15,10 @@ export function Boids() {
     const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
     const [canvasSize, setCanvasSize] = React.useState(500);
 
+    // UI
     const [playAnimation, setPlayAnimation] = React.useState(true);
     const playAnimationRef = React.useRef(playAnimation);
-
-    React.useEffect(() => {
-        playAnimationRef.current = playAnimation;
-        if (playAnimation) {
-            requestAnimationFrame(render);
-        }
-    }, [playAnimation]);
+    const [boidCount, setBoidCount] = React.useState(0);
 
     function render() {
         if (!memory.current || !universe.current || !canvasRef.current) {
@@ -89,6 +84,17 @@ export function Boids() {
     }
 
     React.useEffect(() => {
+        universe.current?.set_number_of_boids(boidCount);
+    }, [boidCount])
+
+    React.useEffect(() => {
+        playAnimationRef.current = playAnimation;
+        if (playAnimation) {
+            requestAnimationFrame(render);
+        }
+    }, [playAnimation]);
+
+    React.useEffect(() => {
         if (wasmInitialised.current) {
             console.log("returning");
             return;
@@ -99,6 +105,7 @@ export function Boids() {
             let wasm = await init();
             memory.current = wasm.memory;
             await initThreadPool(navigator.hardwareConcurrency);
+            init_panic_hook();
 
             const canvas = canvasRef.current;
             if (!canvas) return;
@@ -112,6 +119,7 @@ export function Boids() {
             canvas.height = canvasSize;
 
             universe.current = Builder.from_preset(Preset.Basic).number_of_boids(100).build();
+            setBoidCount(universe.current.get_number_of_boids());
 
             requestAnimationFrame(render)
         })();
@@ -122,6 +130,19 @@ export function Boids() {
         <div className={styles.canvasWrapper}>
             <canvas className={styles.canvas} ref={canvasRef} />
             <button onClick={() => setPlayAnimation(!playAnimation)}>{playAnimation ? "Pause" : "Play"}</button>
-        </div>
+            <Slider.Root
+                className={styles.SliderRoot}
+                defaultValue={[boidCount]}
+                onValueChange={([value]) => setBoidCount(value)}
+                min={0}
+                max={200}
+                step={1}
+            >
+                <Slider.Track className={styles.SliderTrack}>
+                    <Slider.Range className={styles.SliderRange} />
+                </Slider.Track>
+                <Slider.Thumb className={styles.SliderThumb} />
+            </Slider.Root>
+        </div >
     )
 }
