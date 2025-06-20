@@ -1,0 +1,62 @@
+.SliderGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.SliderGroupLabelWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.SliderRoot {
+    --default-color-primary: hsl(0deg 0% 90%);
+    --default-color-secondary: rgba(25, 26, 26, 0.5);
+    --default-color-background: hsl(0deg 0% 20%);
+    --default-color-shadow: hsl(0deg 0% 50%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    touch-action: none;
+    width: 100%;
+    height: 20px;
+    cursor: grab;
+}
+
+.SliderRoot:active {
+    cursor: grabbing;
+}
+
+.SliderTrack {
+    background-color: var(--color-background, var(--default-color-background));
+    position: relative;
+    flex-grow: 1;
+    border-radius: 100vmax;
+    height: 3px;
+}
+
+.SliderRange {
+    position: absolute;
+    background-color: var(--color-primary, var(--default-color-primary));
+    border-radius: 100vmax;
+    height: 100%;
+    /* To fix half subpixel clipping on the edges. */
+    box-shadow: 0 0 0 1px white;
+}
+
+.SliderThumb {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-primary, var(--default-color-primary));
+    border-radius: 10px;
+}
+
+.SliderThumb:hover {
+    filter: contrast(1.1);
+}
+
+.SliderThumb:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-secondary, var(--default-color-secondary));
+}

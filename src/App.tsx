@@ -4,8 +4,12 @@ import { Boids } from '../'
 function App() {
     return <>
         <div className={styles.boidsWrapper}>
-            <Boids.Root>
+            <Boids.Root boidCount={100}>
                 <Boids.Canvas />
+                <Boids.Controls>
+                    <Boids.Playback />
+                    <Boids.Count />
+                </Boids.Controls>
             </Boids.Root>
         </div>
     </>

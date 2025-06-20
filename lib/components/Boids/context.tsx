@@ -1,10 +1,12 @@
 import type { Universe } from '@kaichevannes/wasm-boids';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, type Dispatch, type SetStateAction } from 'react';
 
 type BoidsContextType = {
     universe: Universe;
     memory: WebAssembly.Memory;
-    boidCount: number;
+    defaultBoidCount: number;
+    playing: boolean;
+    setPlaying: Dispatch<SetStateAction<boolean>>;
 }
 
 const BoidsContext = createContext<BoidsContextType | null>(null);

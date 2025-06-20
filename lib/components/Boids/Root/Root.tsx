@@ -15,7 +15,7 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
     const wasmInitialised = useRef(false);
     const universe = useRef<Universe | null>(null);
     const memory = useRef<WebAssembly.Memory | null>(null);
-
+    const [playing, setPlaying] = useState(true);
 
     useEffect(() => {
         // This is to prevent the double call on `initThreadPool` in dev. Unsure how to do this
@@ -46,7 +46,9 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
             // This will always be initialised since we guard above with the isReady flag.
             universe: universe.current!,
             memory: memory.current!,
-            boidCount
+            defaultBoidCount: boidCount,
+            playing,
+            setPlaying,
         }}>
             {children}
         </BoidsContext.Provider>

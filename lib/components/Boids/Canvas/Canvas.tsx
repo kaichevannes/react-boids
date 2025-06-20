@@ -2,25 +2,41 @@ import {
     useRef,
     useState,
     useEffect,
-    useId,
-    type Dispatch,
-    type SetStateAction,
 } from 'react';
-import { Slider } from 'radix-ui';
 
 import styles from './styles.module.css';
 import { useBoidsContext } from '../context';
 
 function Canvas() {
-    const { universe, memory, boidCount: defaultBoidCount } = useBoidsContext();
+    const { universe, memory, playing } = useBoidsContext();
     // Canvas
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [canvasSize, setCanvasSize] = useState(500);
 
     // UI
-    const [playAnimation, setPlayAnimation] = useState(true);
-    const playAnimationRef = useRef(playAnimation);
-    const [boidCount, setBoidCount] = useState(defaultBoidCount);
+    const playAnimationRef = useRef(playing);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const observer = new ResizeObserver(() => {
+            setCanvasSize(canvas.clientWidth);
+        });
+        observer.observe(canvas);
+
+        canvas.width = canvasSize;
+        canvas.height = canvasSize;
+
+        requestAnimationFrame(render)
+    }, []);
+
+    useEffect(() => {
+        playAnimationRef.current = playing;
+        if (playing) {
+            requestAnimationFrame(render);
+        }
+    }, [playing]);
 
     function render() {
         if (!canvasRef.current) {
@@ -85,72 +101,12 @@ function Canvas() {
         }
     }
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const observer = new ResizeObserver(() => {
-            setCanvasSize(canvas.clientWidth);
-        });
-        observer.observe(canvas);
-
-        canvas.width = canvasSize;
-        canvas.height = canvasSize;
-
-        requestAnimationFrame(render)
-    }, []);
-
-    useEffect(() => {
-        universe.set_number_of_boids(boidCount);
-    }, [boidCount])
-
-    useEffect(() => {
-        playAnimationRef.current = playAnimation;
-        if (playAnimation) {
-            requestAnimationFrame(render);
-        }
-    }, [playAnimation]);
-
     return (
         <div className={styles.canvasWrapper}>
             <canvas className={styles.canvas} ref={canvasRef} />
-            <button onClick={() => setPlayAnimation(!playAnimation)}>{playAnimation ? "Pause" : "Play"}</button>
-            <LogSliderGroup name="Number of Boids" state={boidCount} setState={setBoidCount} min={1} max={1000} />
         </div>
     )
 }
 
-const LogSliderGroup = ({ name, state, setState, min, max }:
-    { name: string, state: number, setState: Dispatch<SetStateAction<number>>, min: number, max: number }
-) => {
-    const id = useId();
-
-    const logMin = Math.log(min);
-    const logMax = Math.log(max);
-    return (
-        <div className={styles.SliderGroup}>
-            <div className={styles.SliderGroupLabelWrapper}>
-                <label htmlFor={id}>{name}</label>
-                <span>{state}</span>
-            </div>
-            <Slider.Root
-                id={id}
-                className={styles.SliderRoot}
-                value={[(Math.log(state) - logMin) / (logMax - logMin)]}
-                onValueChange={([value]) => {
-                    setState(Math.round(Math.exp(logMin + value * (logMax - logMin))));
-                }}
-                min={0}
-                max={1}
-                step={0.01}
-            >
-                <Slider.Track className={styles.SliderTrack}>
-                    <Slider.Range className={styles.SliderRange} />
-                </Slider.Track>
-                <Slider.Thumb className={styles.SliderThumb} />
-            </Slider.Root>
-        </div>
-    )
-};
 
 export { Canvas }
