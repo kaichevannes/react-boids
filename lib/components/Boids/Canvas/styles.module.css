@@ -1,7 +1,3 @@
-.div {
-    color: red;
-}
-
 .canvas {
     display: block;
     width: 100%;
@@ -15,6 +11,16 @@
     border: 2px solid blue;
 }
 
+.SliderGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.SliderGroupLabelWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
 .SliderRoot {
     --default-color-primary: hsl(0deg 0% 90%);
     --default-color-secondary: rgba(25, 26, 26, 0.5);
@@ -25,8 +31,13 @@
     align-items: center;
     user-select: none;
     touch-action: none;
-    width: 200px;
+    width: 100%;
     height: 20px;
+    cursor: grab;
+}
+
+.SliderRoot:active {
+    cursor: grabbing;
 }
 
 .SliderTrack {

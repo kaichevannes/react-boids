@@ -4,7 +4,9 @@ import { Boids } from '../'
 function App() {
     return <>
         <div className={styles.boidsWrapper}>
-            <Boids />
+            <Boids.Root>
+                <Boids.Canvas />
+            </Boids.Root>
         </div>
     </>
 }
