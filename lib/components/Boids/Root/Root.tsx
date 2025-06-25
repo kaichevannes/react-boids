@@ -5,7 +5,7 @@ import {
     useState
 } from 'react'
 
-import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from '@kaichevannes/wasm-boids'
+import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from '../../../../wasm/pkg/wasm_boids.js'
 
 import { BoidsContext } from '../context';
 
@@ -15,7 +15,7 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
     const wasmInitialised = useRef(false);
     const universe = useRef<Universe | null>(null);
     const memory = useRef<WebAssembly.Memory | null>(null);
-    const [playing, setPlaying] = useState(true);
+    const [playing, setPlaying] = useState(false);
 
     useEffect(() => {
         // This is to prevent the double call on `initThreadPool` in dev. Unsure how to do this

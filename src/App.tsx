@@ -8,8 +8,8 @@ function App() {
                 <Boids.Canvas />
                 <Boids.Controls>
                     <Boids.Playback />
-                    <Boids.Count />
                     <Boids.Multithreaded />
+                    <Boids.Count />
                     <Boids.BoidsPerThread />
                 </Boids.Controls>
             </Boids.Root>

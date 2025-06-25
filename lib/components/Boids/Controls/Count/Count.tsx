@@ -15,7 +15,7 @@ function Count() {
         universe.set_number_of_boids(boidCount);
     }, [boidCount])
 
-    return <LogSliderGroup name="Number of Boids" state={boidCount} setState={setBoidCount} min={1} max={15000} />
+    return <LogSliderGroup name="Number of Boids" state={boidCount} setState={setBoidCount} min={1} max={50000} />
 };
 
 export { Count }

@@ -10,7 +10,6 @@
       },
       "devDependencies": {
         "@eslint/js": "^9.25.0",
-        "@kaichevannes/wasm-boids": "0.2.20",
         "@types/node": "^22.15.29",
         "@types/react": "^19.1.2",
         "@types/react-dom": "^19.1.2",
@@ -191,8 +190,6 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.0", "", {}, "sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.25", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ=="],
-
-    "@kaichevannes/wasm-boids": ["@kaichevannes/wasm-boids@0.2.20", "", {}, "sha512-MpbjtAU8L7Zz3/Jhy7l5OLGBRGWCKj2598NlO6lgRO8XtJ7r1b5jNY0ROLPNqJZyFaHpiibJDhnmh37FpzMNIw=="],
 
     "@microsoft/api-extractor": ["@microsoft/api-extractor@7.52.8", "", { "dependencies": { "@microsoft/api-extractor-model": "7.30.6", "@microsoft/tsdoc": "~0.15.1", "@microsoft/tsdoc-config": "~0.17.1", "@rushstack/node-core-library": "5.13.1", "@rushstack/rig-package": "0.5.3", "@rushstack/terminal": "0.15.3", "@rushstack/ts-command-line": "5.0.1", "lodash": "~4.17.15", "minimatch": "~3.0.3", "resolve": "~1.22.1", "semver": "~7.5.4", "source-map": "~0.6.1", "typescript": "5.8.2" }, "bin": { "api-extractor": "bin/api-extractor" } }, "sha512-cszYIcjiNscDoMB1CIKZ3My61+JOhpERGlGr54i6bocvGLrcL/wo9o+RNXMBrb7XgLtKaizZWUpqRduQuHQLdg=="],
 

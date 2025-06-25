@@ -69,42 +69,51 @@ function Canvas() {
 
         ctx.clearRect(0, 0, size, size);
         ctx.fillStyle = "black";
-        const universeSize = universe.get_size();
-        const triangleSize = universeSize / 15;
-        boids.forEach((b) => {
-            let x = (b.x / universeSize) * size;
-            let y = (b.y / universeSize) * size;
-            const angle = Math.atan2(b.vy, b.vx);
+        // const universeSize = universe.get_size();
+        // const triangleSize = universeSize / 15;
+        // boids.forEach((b) => {
+        //     let x = (b.x / universeSize) * size;
+        //     let y = (b.y / universeSize) * size;
+        //     const angle = Math.atan2(b.vy, b.vx);
+        //
+        //     ctx.setTransform(
+        //         Math.cos(angle),
+        //         Math.sin(angle),
+        //         -Math.sin(angle),
+        //         Math.cos(angle),
+        //         x,
+        //         y,
+        //     )
+        //
+        //     ctx.beginPath();
+        //     ctx.moveTo(triangleSize, 0);
+        //     ctx.lineTo(-triangleSize, triangleSize);
+        //     ctx.lineTo(-triangleSize, -triangleSize);
+        //     ctx.closePath();
+        //     ctx.fill();
+        //
+        // });
+        // ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-            ctx.setTransform(
-                Math.cos(angle),
-                Math.sin(angle),
-                -Math.sin(angle),
-                Math.cos(angle),
-                x,
-                y,
-            )
-
-            ctx.beginPath();
-            ctx.moveTo(triangleSize, 0);
-            ctx.lineTo(-triangleSize, triangleSize);
-            ctx.lineTo(-triangleSize, -triangleSize);
-            ctx.closePath();
-            ctx.fill();
-
-        });
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-
+        const start = performance.now();
         universe.tick();
+        const end = performance.now();
+        console.log(`Tick took ${end - start} milliseconds`);
         if (playAnimationRef.current) {
             requestAnimationFrame(render)
         }
     }
 
     return (
-        <div className={styles.canvasWrapper}>
-            <canvas className={styles.canvas} ref={canvasRef} />
-        </div>
+        <>
+            <div className={styles.canvasWrapper}>
+                <canvas className={styles.canvas} ref={canvasRef} />
+            </div>
+            <button onClick={() => {
+                universe.tick();
+                requestAnimationFrame(render);
+            }}>Tick</button>
+        </>
     )
 }
 
