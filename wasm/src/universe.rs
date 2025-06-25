@@ -1,15 +1,20 @@
 pub mod builder;
 
-use rayon::iter::{IndexedParallelIterator, IntoParallelIterator, ParallelIterator};
 use std::thread;
+
+use rayon::{
+    iter::{IndexedParallelIterator, IntoParallelIterator, ParallelIterator},
+    slice::ParallelSlice,
+};
 use web_sys::console;
 
 use crate::{
     boid::{Boid, Vec2},
     boid_factory::BoidFactory,
     grid::Grid,
+};
 use builder::{Builder, Preset};
-use rand::{rngs::ThreadRng, Rng};
+use rand::{Rng, rngs::ThreadRng};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -54,42 +59,39 @@ impl Universe {
     ///
     /// This will perform a state update for every Boid in the universe.
     pub fn tick(&mut self) {
-        let boids_to_iterate_over: Vec<Boid> = self.grid.get_points().to_vec();
+        self.grid.prepare(
+            self.attraction_radius
+                .max(self.alignment_radius)
+                .max(self.separation_radius),
+        );
 
         let boids: Vec<Boid> = if self.multithreaded {
-            boids_to_iterate_over
+            self.get_boids()
                 .into_par_iter()
                 .with_min_len(self.boids_per_thread)
-                .map_init(
-                    || {
-                        console::log_1(&"map_init called".into());
-                        (rand::rng(), self.grid.clone())
-                    },
-                    |(rng, grid), boid| {
-                        // console::log_1(
-                        //     &format!("Running on thread: {:?}", thread::current().id()).into(),
-                        // );
-                        Universe::process_boid(
-                            boid,
-                            rng,
-                            grid,
-                            self.noise_fraction,
-                            self.attraction_radius,
-                            self.attraction_weighting,
-                            self.alignment_radius,
-                            self.alignment_weighting,
-                            self.separation_radius,
-                            self.separation_weighting,
-                            self.maximum_velocity,
-                        )
-                    },
-                )
+                .map_init(rand::rng, |rng, boid| {
+                    // console::log_1(
+                    //     &format!("Running on thread: {:?}", thread::current().id()).into(),
+                    // );
+                    Universe::process_boid(
+                        boid,
+                        rng,
+                        &self.grid,
+                        self.noise_fraction,
+                        self.attraction_radius,
+                        self.attraction_weighting,
+                        self.alignment_radius,
+                        self.alignment_weighting,
+                        self.separation_radius,
+                        self.separation_weighting,
+                        self.maximum_velocity,
+                    )
+                })
                 .collect()
         } else {
             let mut rng = rand::rng();
-            let mut grid = self.grid.clone();
-            boids_to_iterate_over
-                .into_iter()
+            self.get_boids()
+                .iter()
                 .map(|boid| {
                     // console::log_1(
                     //     &format!("Running on single thread: {:?}", thread::current().id()).into(),
@@ -97,7 +99,7 @@ impl Universe {
                     Universe::process_boid(
                         boid,
                         &mut rng,
-                        &mut grid,
+                        &self.grid,
                         self.noise_fraction,
                         self.attraction_radius,
                         self.attraction_weighting,
@@ -222,9 +224,9 @@ impl Universe {
     }
 
     fn process_boid(
-        boid: Boid,
+        boid: &Boid,
         rng: &mut ThreadRng,
-        grid: &mut Box<dyn Grid<Boid>>,
+        grid: &Box<dyn Grid<Boid>>,
         noise_fraction: f32,
         attraction_radius: f32,
         attraction_weighting: f32,
@@ -239,13 +241,12 @@ impl Universe {
             Vec2(rng.random_range(-1.0..1.0), rng.random_range(-1.0..1.0)) * noise_fraction;
 
         let attraction_acceleration =
-            Universe::attraction_acceleration(&boid, grid, attraction_radius)
+            Universe::attraction_acceleration(boid, grid, attraction_radius)
                 * (attraction_weighting - noise_deduction);
-        let alignment_acceleration =
-            Universe::alignment_acceleration(&boid, grid, alignment_radius)
-                * (alignment_weighting - noise_deduction);
+        let alignment_acceleration = Universe::alignment_acceleration(boid, grid, alignment_radius)
+            * (alignment_weighting - noise_deduction);
         let separation_acceleration =
-            Universe::separation_acceleration(&boid, grid, separation_radius)
+            Universe::separation_acceleration(boid, grid, separation_radius)
                 * (separation_weighting - noise_deduction);
 
         let acceleration = boid.acceleration
@@ -296,7 +297,7 @@ impl Universe {
 
     fn attraction_acceleration(
         boid: &Boid,
-        grid: &mut Box<dyn Grid<Boid>>,
+        grid: &Box<dyn Grid<Boid>>,
         attraction_radius: f32,
     ) -> Vec2 {
         let grid_size = grid.get_size();
@@ -314,7 +315,7 @@ impl Universe {
 
     fn alignment_acceleration(
         boid: &Boid,
-        grid: &mut Box<dyn Grid<Boid>>,
+        grid: &Box<dyn Grid<Boid>>,
         alignment_radius: f32,
     ) -> Vec2 {
         let neighbors = grid.neighbors(boid, alignment_radius);
@@ -331,7 +332,7 @@ impl Universe {
 
     fn separation_acceleration(
         boid: &Boid,
-        grid: &mut Box<dyn Grid<Boid>>,
+        grid: &Box<dyn Grid<Boid>>,
         separation_radius: f32,
     ) -> Vec2 {
         let grid_size = grid.get_size();
@@ -446,10 +447,12 @@ mod tests {
             .iter()
             .map(|boid| boid.position)
             .collect();
-        assert!(original_positions
-            .iter()
-            .zip(updated_positions.iter())
-            .all(|(before, after)| before != after));
+        assert!(
+            original_positions
+                .iter()
+                .zip(updated_positions.iter())
+                .all(|(before, after)| before != after)
+        );
     }
 
     #[test]

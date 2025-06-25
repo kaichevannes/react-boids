@@ -32,7 +32,7 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
             await initThreadPool(navigator.hardwareConcurrency);
             init_panic_hook();
 
-            universe.current = Builder.from_preset(Preset.Basic)
+            universe.current = Builder.from_preset(Preset.Maruyama)
                 .number_of_boids(boidCount)
                 .multithreaded(true)
                 .number_of_boids_per_thread(1000)
