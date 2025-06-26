@@ -1,10 +1,12 @@
-import type { Universe } from '../../../wasm/pkg/wasm_boids.js';
+import type { Preset, Universe } from '../../../wasm/pkg/wasm_boids.js';
 import { createContext, useContext, type Dispatch, type SetStateAction } from 'react';
 
 type BoidsContextType = {
     universe: Universe;
+    setPreset: Dispatch<SetStateAction<Preset>>;
     memory: WebAssembly.Memory;
-    defaultBoidCount: number;
+    boidCount: number;
+    setBoidCount: Dispatch<SetStateAction<number>>;
     playing: boolean;
     setPlaying: Dispatch<SetStateAction<boolean>>;
 }

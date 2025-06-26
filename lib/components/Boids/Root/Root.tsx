@@ -15,7 +15,9 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
     const wasmInitialised = useRef(false);
     const universe = useRef<Universe | null>(null);
     const memory = useRef<WebAssembly.Memory | null>(null);
-    const [playing, setPlaying] = useState(false);
+    const [playing, setPlaying] = useState(true);
+    const [preset, setPreset] = useState(Preset.Basic);
+    const [currentBoidCount, setCurrentBoidCount] = useState(boidCount);
 
     useEffect(() => {
         // This is to prevent the double call on `initThreadPool` in dev. Unsure how to do this
@@ -32,7 +34,7 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
             await initThreadPool(navigator.hardwareConcurrency);
             init_panic_hook();
 
-            universe.current = Builder.from_preset(Preset.Maruyama)
+            universe.current = Builder.from_preset(preset)
                 .number_of_boids(boidCount)
                 .multithreaded(true)
                 .number_of_boids_per_thread(1000)
@@ -43,14 +45,29 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
 
     }, []);
 
+    useEffect(() => {
+        if (universe.current == null) {
+            return;
+        }
+
+        universe.current = Universe.build_from_preset(preset);
+        setCurrentBoidCount(universe.current.get_number_of_boids());
+
+        // Hack to update the canvas.
+        setPlaying(false);
+        setTimeout(() => setPlaying(true), 0);
+    }, [preset])
+
     if (!isReady) return;
 
     return (
         <BoidsContext.Provider value={{
             // This will always be initialised since we guard above with the isReady flag.
             universe: universe.current!,
+            setPreset,
             memory: memory.current!,
-            defaultBoidCount: boidCount,
+            boidCount: currentBoidCount,
+            setBoidCount: setCurrentBoidCount,
             playing,
             setPlaying,
         }}>

@@ -5,5 +5,6 @@ import { Count } from './Controls/Count/Count.tsx';
 import { Playback } from './Controls/Playback/Playback.tsx';
 import { Multithreaded } from './Controls/Multithreaded/Multithreaded.tsx';
 import { BoidsPerThread } from './Controls/BoidsPerThread/BoidsPerThread.tsx';
+import { Preset } from './Controls/Preset/Preset.tsx';
 
-export const Boids = { Root, Canvas, Count, Controls, Playback, Multithreaded, BoidsPerThread };
+export const Boids = { Root, Canvas, Count, Controls, Playback, Multithreaded, BoidsPerThread, Preset };

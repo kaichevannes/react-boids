@@ -1,15 +1,12 @@
 import {
     useEffect,
-    useState,
 } from 'react';
 
 import { useBoidsContext } from "../../context";
 import { LogSliderGroup } from '../LogSliderGroup';
 
 function Count() {
-    const { universe, defaultBoidCount } = useBoidsContext();
-
-    const [boidCount, setBoidCount] = useState(defaultBoidCount);
+    const { universe, boidCount, setBoidCount } = useBoidsContext();
 
     useEffect(() => {
         universe.set_number_of_boids(boidCount);

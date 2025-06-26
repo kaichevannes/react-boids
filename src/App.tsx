@@ -11,6 +11,7 @@ function App() {
                     <Boids.Multithreaded />
                     <Boids.Count />
                     <Boids.BoidsPerThread />
+                    <Boids.Preset />
                 </Boids.Controls>
             </Boids.Root>
         </div>
