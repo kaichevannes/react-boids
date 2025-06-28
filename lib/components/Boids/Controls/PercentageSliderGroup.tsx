@@ -3,11 +3,10 @@ import {
     type SetStateAction,
 } from 'react';
 import { Slider } from 'radix-ui';
-
 import styles from './styles.module.css';
 
-const SliderGroup = ({ name, state, setState, min, max, step = 1 }:
-    { name: string, state: number, setState: Dispatch<SetStateAction<number>>, min: number, max: number, step?: number }
+const PercentSliderGroup = ({ name, state, setState }:
+    { name: string, state: number, setState: Dispatch<SetStateAction<number>> }
 ) => {
     return (
         <div className={styles.SliderGroup}>
@@ -20,9 +19,9 @@ const SliderGroup = ({ name, state, setState, min, max, step = 1 }:
                 className={styles.SliderRoot}
                 value={[state]}
                 onValueChange={([value]) => setState(value)}
-                min={min}
-                max={max}
-                step={step}
+                min={0}
+                max={100}
+                step={1}
             >
                 <Slider.Track className={styles.SliderTrack}>
                     <Slider.Range className={styles.SliderRange} />
@@ -33,4 +32,4 @@ const SliderGroup = ({ name, state, setState, min, max, step = 1 }:
     )
 };
 
-export { SliderGroup }
+export { PercentSliderGroup }

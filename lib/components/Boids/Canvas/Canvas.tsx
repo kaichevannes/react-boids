@@ -16,6 +16,13 @@ function Canvas() {
     // UI
     const playAnimationRef = useRef(playing);
 
+    // Universe ref to keep it up to date
+    const universeRef = useRef(universe);
+
+    useEffect(() => {
+        universeRef.current = universe;
+    }, [universe])
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -38,16 +45,31 @@ function Canvas() {
         }
     }, [playing]);
 
-    function render() {
+    const TARGET_FPS = 1000;
+    const FRAME_INTERVAL = 1000 / TARGET_FPS;
+
+    let lastFrameTime = performance.now();
+
+    function render(timestamp: number) {
         if (!canvasRef.current) {
             return;
         }
 
+        const delta = timestamp - lastFrameTime;
+        if (delta < FRAME_INTERVAL) {
+            if (playAnimationRef) {
+                requestAnimationFrame(render);
+            }
+            return;
+        }
+
+        lastFrameTime = performance.now();
+
         const FLOATS_PER_BOID = 6;
-        const boidsPtr = universe.get_boids_pointer();
-        const data = new Float32Array(memory.buffer, boidsPtr, universe.get_number_of_boids() * FLOATS_PER_BOID);
+        const boidsPtr = universeRef.current.get_boids_pointer();
+        const data = new Float32Array(memory.buffer, boidsPtr, universeRef.current.get_number_of_boids() * FLOATS_PER_BOID);
         let boids = [];
-        for (let i = 0; i < universe.get_number_of_boids(); i++) {
+        for (let i = 0; i < universeRef.current.get_number_of_boids(); i++) {
             const offset = i * FLOATS_PER_BOID;
 
             const boid = {
@@ -68,8 +90,10 @@ function Canvas() {
         }
 
         ctx.clearRect(0, 0, size, size);
-        ctx.fillStyle = "black";
-        const universeSize = universe.get_size();
+        ctx.fillStyle = "var(--color-background)";
+        ctx.fillRect(0, 0, size, size);
+        ctx.fillStyle = "var(--color-primary)";
+        const universeSize = universeRef.current.get_size();
         const triangleSize = size / 100;
         boids.forEach((b) => {
             let x = (b.x / universeSize) * size;
@@ -95,8 +119,13 @@ function Canvas() {
         });
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
+        const instantaneous_fps = 1000 / delta;
+        ctx.fillStyle = "var(--color-secondary)";
+        ctx.font = "16px monospace";
+        ctx.fillText(`FPS: ${Math.trunc(instantaneous_fps)}`, canvasSize - 76, 16);
+
         // const start = performance.now();
-        universe.tick();
+        universeRef.current.tick();
         // const end = performance.now();
         // console.log(`Tick took ${end - start} milliseconds`);
         if (playAnimationRef.current) {
@@ -109,10 +138,10 @@ function Canvas() {
             <div className={styles.canvasWrapper}>
                 <canvas className={styles.canvas} ref={canvasRef} />
             </div>
-            <button onClick={() => {
-                universe.tick();
-                requestAnimationFrame(render);
-            }}>Tick</button>
+            {/* <button onClick={() => { */}
+            {/*     universe.tick(); */}
+            {/*     requestAnimationFrame(render); */}
+            {/* }}>Tick</button> */}
         </>
     )
 }

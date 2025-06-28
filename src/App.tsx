@@ -12,6 +12,12 @@ function App() {
                     <Boids.Count />
                     <Boids.BoidsPerThread />
                     <Boids.Preset />
+                    <Boids.AttractionWeighting />
+                    <Boids.AlignmentWeighting />
+                    <Boids.SeparationWeighting />
+                    <Boids.AttractionRadius />
+                    <Boids.AlignmentRadius />
+                    <Boids.SeparationRadius />
                 </Boids.Controls>
             </Boids.Root>
         </div>

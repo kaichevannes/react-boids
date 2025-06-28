@@ -1,5 +1,4 @@
 import {
-    useId,
     type Dispatch,
     type SetStateAction,
 } from 'react';
@@ -9,18 +8,16 @@ import styles from './styles.module.css';
 const LogSliderGroup = ({ name, state, setState, min, max }:
     { name: string, state: number, setState: Dispatch<SetStateAction<number>>, min: number, max: number }
 ) => {
-    const id = useId();
-
     const logMin = Math.log(min);
     const logMax = Math.log(max);
     return (
         <div className={styles.SliderGroup}>
             <div className={styles.SliderGroupLabelWrapper}>
-                <label htmlFor={id}>{name}</label>
+                <label htmlFor={name}>{name}</label>
                 <span>{state}</span>
             </div>
             <Slider.Root
-                id={id}
+                id={name}
                 className={styles.SliderRoot}
                 value={[(Math.log(state) - logMin) / (logMax - logMin)]}
                 onValueChange={([value]) => {

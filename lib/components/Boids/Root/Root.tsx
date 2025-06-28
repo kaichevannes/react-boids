@@ -18,6 +18,12 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
     const [playing, setPlaying] = useState(true);
     const [preset, setPreset] = useState(Preset.Basic);
     const [currentBoidCount, setCurrentBoidCount] = useState(boidCount);
+    const [attractionWeighting, setAttractionWeighting] = useState(0);
+    const [alignmentWeighting, setAlignmentWeighting] = useState(0);
+    const [separationWeighting, setSeparationWeighting] = useState(0);
+    const [attractionRadius, setAttractionRadius] = useState(0);
+    const [alignmentRadius, setAlignmentRadius] = useState(0);
+    const [separationRadius, setSeparationRadius] = useState(0);
 
     useEffect(() => {
         // This is to prevent the double call on `initThreadPool` in dev. Unsure how to do this
@@ -40,6 +46,13 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
                 .number_of_boids_per_thread(1000)
                 .build();
 
+            setAttractionWeighting(universe.current.get_attraction_weighting());
+            setAlignmentWeighting(universe.current.get_alignment_weighting());
+            setSeparationWeighting(universe.current.get_separation_weighting());
+            setAttractionRadius(universe.current.get_attraction_radius());
+            setAlignmentRadius(universe.current.get_alignment_radius());
+            setSeparationRadius(universe.current.get_separation_radius());
+
             setIsReady(true);
         })();
 
@@ -52,10 +65,13 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
 
         universe.current = Universe.build_from_preset(preset);
         setCurrentBoidCount(universe.current.get_number_of_boids());
+        setAttractionWeighting(universe.current.get_attraction_weighting());
+        setAlignmentWeighting(universe.current.get_alignment_weighting());
+        setSeparationWeighting(universe.current.get_separation_weighting());
+        setAttractionRadius(universe.current.get_attraction_radius());
+        setAlignmentRadius(universe.current.get_alignment_radius());
+        setSeparationRadius(universe.current.get_separation_radius());
 
-        // Hack to update the canvas.
-        setPlaying(false);
-        setTimeout(() => setPlaying(true), 0);
     }, [preset])
 
     if (!isReady) return;
@@ -68,6 +84,18 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
             memory: memory.current!,
             boidCount: currentBoidCount,
             setBoidCount: setCurrentBoidCount,
+            attractionWeighting,
+            setAttractionWeighting,
+            alignmentWeighting,
+            setAlignmentWeighting,
+            separationWeighting,
+            setSeparationWeighting,
+            attractionRadius,
+            setAttractionRadius,
+            alignmentRadius,
+            setAlignmentRadius,
+            separationRadius,
+            setSeparationRadius,
             playing,
             setPlaying,
         }}>

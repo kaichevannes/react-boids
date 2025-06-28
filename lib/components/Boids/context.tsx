@@ -9,6 +9,18 @@ type BoidsContextType = {
     setBoidCount: Dispatch<SetStateAction<number>>;
     playing: boolean;
     setPlaying: Dispatch<SetStateAction<boolean>>;
+    attractionWeighting: number,
+    setAttractionWeighting: Dispatch<SetStateAction<number>>;
+    alignmentWeighting: number,
+    setAlignmentWeighting: Dispatch<SetStateAction<number>>;
+    separationWeighting: number,
+    setSeparationWeighting: Dispatch<SetStateAction<number>>;
+    attractionRadius: number,
+    setAttractionRadius: Dispatch<SetStateAction<number>>;
+    alignmentRadius: number,
+    setAlignmentRadius: Dispatch<SetStateAction<number>>;
+    separationRadius: number,
+    setSeparationRadius: Dispatch<SetStateAction<number>>;
 }
 
 const BoidsContext = createContext<BoidsContextType | null>(null);
