@@ -90,9 +90,9 @@ function Canvas() {
         }
 
         ctx.clearRect(0, 0, size, size);
-        ctx.fillStyle = "var(--color-background)";
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim();
         ctx.fillRect(0, 0, size, size);
-        ctx.fillStyle = "var(--color-text)";
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
         const universeSize = universeRef.current.get_size();
         const triangleSize = size / 100;
         boids.forEach((b) => {
@@ -120,9 +120,9 @@ function Canvas() {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         const instantaneous_fps = 1000 / delta;
-        ctx.fillStyle = "var(--color-primary)";
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
         ctx.font = "16px monospace";
-        ctx.fillText(`FPS: ${Math.trunc(instantaneous_fps)}`, canvasSize - 76, 16);
+        ctx.fillText(`FPS: ${Math.trunc(instantaneous_fps)}`, size - 76, 16);
 
         // const start = performance.now();
         universeRef.current.tick();

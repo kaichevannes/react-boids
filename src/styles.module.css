@@ -1,3 +1,10 @@
+:root {
+    --color-text: hsl(0deg 0% 20%);
+    --color-primary: blue;
+    --color-background: hsl(0deg 0% 90%);
+    --color-shadow: hsl(0deg 0% 50%);
+}
+
 .boidsWrapper {
     display: grid;
     place-content: center;

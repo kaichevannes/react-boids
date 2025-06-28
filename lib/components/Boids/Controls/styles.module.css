@@ -14,9 +14,9 @@
 }
 
 .SliderRoot {
-    --default-color-text: hsl(0deg 0% 90%);
+    --default-color-text: hsl(0deg 0% 20%);
     --default-color-primary: rgba(25, 26, 26, 0.5);
-    --default-color-background: hsl(0deg 0% 20%);
+    --default-color-background: hsl(0deg 0% 90%);
     --default-color-shadow: hsl(0deg 0% 50%);
     position: relative;
     display: flex;
@@ -33,7 +33,7 @@
 }
 
 .SliderTrack {
-    background-color: var(--color-background, var(--default-color-background));
+    background-color: var(--color-text, var(--default-color-text));
     position: relative;
     flex-grow: 1;
     border-radius: 100vmax;
@@ -42,7 +42,7 @@
 
 .SliderRange {
     position: absolute;
-    background-color: var(--color-text, var(--default-color-text));
+    background-color: var(--color-background, var(--default-color-background));
     border-radius: 100vmax;
     height: 100%;
     /* To fix half subpixel clipping on the edges. */
@@ -53,7 +53,7 @@
     display: block;
     width: 20px;
     height: 20px;
-    background-color: var(--color-text, var(--default-color-text));
+    background-color: var(--color-background, var(--default-color-background));
     border-radius: 10px;
 }
 
