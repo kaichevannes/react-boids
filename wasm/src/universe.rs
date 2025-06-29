@@ -131,7 +131,11 @@ impl Universe {
 
     pub fn set_density(&mut self, density: f32) {
         let number_of_boids = self.grid.get_points().len();
-        self.grid.resize((number_of_boids as f32 / density).sqrt());
+        if density > 0.0 {
+            self.grid.resize((number_of_boids as f32 / density).sqrt());
+        } else {
+            self.grid.resize((number_of_boids as f32).sqrt());
+        }
     }
 
     pub fn set_attraction_weighting(&mut self, weighting: f32) {

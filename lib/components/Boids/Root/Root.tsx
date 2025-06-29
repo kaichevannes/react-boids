@@ -9,7 +9,7 @@ import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from
 
 import { BoidsContext } from '../context';
 
-export function Root({ children, boidCount = 100 }: { children: ReactNode, boidCount: number }) {
+export function Root({ children, boidCount = 500 }: { children: ReactNode, boidCount?: number }) {
     const wasmInitialised = useRef(false);
     const memory = useRef<WebAssembly.Memory | null>(null);
     const [universe, setUniverse] = useState<Universe>();
@@ -23,6 +23,7 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
     const [separationRadius, setSeparationRadius] = useState(0);
     const [maxVelocity, setMaxVelocity] = useState(0);
     const [noise, setNoise] = useState(0);
+    const [density, setDensity] = useState(0);
 
     useEffect(() => {
         // This is to prevent the double call on `initThreadPool` in dev. Unsure how to do this
@@ -56,6 +57,7 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
             setSeparationRadius(universe.get_separation_radius());
             setMaxVelocity(universe.get_maximum_velocity());
             setNoise(universe.get_noise_fraction());
+            setDensity(universe.get_density());
         })();
 
     }, []);
@@ -73,6 +75,7 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
         setSeparationRadius(universe.get_separation_radius());
         setMaxVelocity(universe.get_maximum_velocity());
         setNoise(universe.get_noise_fraction());
+        setDensity(universe.get_density());
     }, [universe])
 
     if (!universe) return;
@@ -103,6 +106,8 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
             setPlaying,
             noise,
             setNoise,
+            density,
+            setDensity
         }}>
             {children}
         </BoidsContext.Provider>

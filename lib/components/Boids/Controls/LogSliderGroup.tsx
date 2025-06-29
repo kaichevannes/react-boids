@@ -5,8 +5,8 @@ import {
 import { Slider } from 'radix-ui';
 import styles from './styles.module.css';
 
-const LogSliderGroup = ({ name, state, setState, min, max }:
-    { name: string, state: number, setState: Dispatch<SetStateAction<number>>, min: number, max: number }
+const LogSliderGroup = ({ name, state, setState, min, max, decimals = false }:
+    { name: string, state: number, setState: Dispatch<SetStateAction<number>>, min: number, max: number, decimals?: boolean }
 ) => {
     const logMin = Math.log(min);
     const logMax = Math.log(max);
@@ -20,7 +20,11 @@ const LogSliderGroup = ({ name, state, setState, min, max }:
                 className={styles.SliderRoot}
                 value={[(Math.log(state) - logMin) / (logMax - logMin)]}
                 onValueChange={([value]) => {
-                    setState(Math.round(Math.exp(logMin + value * (logMax - logMin))));
+                    if (!decimals) {
+                        setState(Math.round(Math.exp(logMin + value * (logMax - logMin))));
+                    } else {
+                        setState(Math.round((Math.exp(logMin + value * (logMax - logMin))) * 100) / 100);
+                    }
                 }}
                 min={0}
                 max={1}

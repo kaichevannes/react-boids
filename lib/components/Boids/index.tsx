@@ -15,6 +15,7 @@ import { SeparationRadius } from './Controls/SeparationRadius/SeparationRadius.t
 import { MaxVelocity } from './Controls/MaxVelocity/MaxVelocity.tsx';
 import { Noise } from './Controls/Noise/Noise.tsx';
 import { Algorithm } from './Controls/Algorithm/Algorithm.tsx';
+import { Density } from './Controls/Density/Density.tsx';
 
 export const Boids = {
     Root,
@@ -34,4 +35,5 @@ export const Boids = {
     MaxVelocity,
     Noise,
     Algorithm,
+    Density,
 };

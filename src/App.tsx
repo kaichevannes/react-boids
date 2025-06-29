@@ -4,7 +4,7 @@ import { Boids } from '../'
 function App() {
     return (
         <div className={styles.boidsWrapper}>
-            <Boids.Root boidCount={100}>
+            <Boids.Root>
                 <Boids.Canvas />
                 <Boids.Controls>
                     <Boids.Playback />
@@ -21,6 +21,7 @@ function App() {
                     <Boids.MaxVelocity />
                     <Boids.Noise />
                     <Boids.Algorithm />
+                    <Boids.Density />
                 </Boids.Controls>
             </Boids.Root>
         </div>

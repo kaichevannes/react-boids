@@ -40,16 +40,16 @@ impl Builder {
     pub fn from_preset(preset: Preset) -> Builder {
         match preset {
             Preset::Basic => Builder::default()
-                .number_of_boids(200)
-                .grid_size(100.0)
+                .number_of_boids(500)
+                .density(0.05)
                 .noise_fraction(0.05)
                 .attraction_weighting(1)
                 .alignment_weighting(1)
                 .separation_weighting(1)
-                .attraction_radius(1.0)
-                .alignment_radius(1.0)
-                .separation_radius(1.0)
-                .maximum_velocity(0.7),
+                .attraction_radius(3.0)
+                .alignment_radius(3.0)
+                .separation_radius(3.0)
+                .maximum_velocity(0.4),
             Preset::Maruyama => Builder::default()
                 .number_of_boids(1000)
                 .density(600.0)

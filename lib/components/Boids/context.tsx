@@ -25,6 +25,8 @@ type BoidsContextType = {
     setMaxVelocity: Dispatch<SetStateAction<number>>,
     noise: number,
     setNoise: Dispatch<SetStateAction<number>>,
+    density: number,
+    setDensity: Dispatch<SetStateAction<number>>,
 }
 
 const BoidsContext = createContext<BoidsContextType | null>(null);
