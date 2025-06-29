@@ -1,4 +1,4 @@
-import type { Universe } from '@kaichevannes/wasm-boids';
+import type { Universe } from '../../../wasm/pkg/wasm_boids';
 import { createContext, useContext, type Dispatch, type SetStateAction } from 'react';
 
 type BoidsContextType = {
