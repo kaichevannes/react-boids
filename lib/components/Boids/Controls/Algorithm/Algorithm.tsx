@@ -1,4 +1,4 @@
-import { Builder } from "../../../../../wasm/pkg/wasm_boids";
+import { Builder } from '@kaichevannes/wasm-boids';
 import { useBoidsContext } from "../../context";
 
 function Algorithm({ className }: { className?: string }) {

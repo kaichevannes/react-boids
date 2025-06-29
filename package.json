@@ -51,6 +51,7 @@
         "vite-plugin-wasm": "^3.4.1"
     },
     "dependencies": {
+        "@kaichevannes/wasm-boids": "0.3.0",
         "@radix-ui/react-slider": "^1.3.5",
         "radix-ui": "^1.4.2",
         "use-debounce": "^10.0.5"

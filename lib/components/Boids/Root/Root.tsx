@@ -5,7 +5,7 @@ import {
     useState
 } from 'react'
 
-import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from '../../../../wasm/pkg/wasm_boids.js'
+import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from '@kaichevannes/wasm-boids'
 
 import { BoidsContext } from '../context';
 
