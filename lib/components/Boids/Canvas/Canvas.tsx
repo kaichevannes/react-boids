@@ -45,6 +45,7 @@ function Canvas() {
         }
     }, [playing]);
 
+    // const TARGET_FPS = 60;
     const TARGET_FPS = 1000;
     const FRAME_INTERVAL = 1000 / TARGET_FPS;
 

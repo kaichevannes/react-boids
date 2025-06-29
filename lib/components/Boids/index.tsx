@@ -12,6 +12,9 @@ import { SeparationWeighting } from './Controls/SeparationWeighting/SeparationWe
 import { AttractionRadius } from './Controls/AttractionRadius/AttractionRadius.tsx';
 import { AlignmentRadius } from './Controls/AlignmentRadius/AlignmentRadius.tsx';
 import { SeparationRadius } from './Controls/SeparationRadius/SeparationRadius.tsx';
+import { MaxVelocity } from './Controls/MaxVelocity/MaxVelocity.tsx';
+import { Noise } from './Controls/Noise/Noise.tsx';
+import { Algorithm } from './Controls/Algorithm/Algorithm.tsx';
 
 export const Boids = {
     Root,
@@ -28,4 +31,7 @@ export const Boids = {
     AttractionRadius,
     AlignmentRadius,
     SeparationRadius,
+    MaxVelocity,
+    Noise,
+    Algorithm,
 };

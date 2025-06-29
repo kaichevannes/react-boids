@@ -11,11 +11,10 @@ const PercentSliderGroup = ({ name, state, setState }:
     return (
         <div className={styles.SliderGroup}>
             <div className={styles.SliderGroupLabelWrapper}>
-                <label htmlFor={name}>{name}</label>
+                <span>{name}</span>
                 <span>{state}</span>
             </div>
             <Slider.Root
-                id={name}
                 className={styles.SliderRoot}
                 value={[state]}
                 onValueChange={([value]) => setState(value)}

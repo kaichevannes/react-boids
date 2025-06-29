@@ -1,26 +1,30 @@
-import type { Preset, Universe } from '../../../wasm/pkg/wasm_boids.js';
+import type { Universe } from '../../../wasm/pkg/wasm_boids.js';
 import { createContext, useContext, type Dispatch, type SetStateAction } from 'react';
 
 type BoidsContextType = {
-    universe: Universe;
-    setPreset: Dispatch<SetStateAction<Preset>>;
-    memory: WebAssembly.Memory;
-    boidCount: number;
-    setBoidCount: Dispatch<SetStateAction<number>>;
-    playing: boolean;
-    setPlaying: Dispatch<SetStateAction<boolean>>;
+    universe: Universe,
+    setUniverse: Dispatch<SetStateAction<Universe | undefined>>,
+    memory: WebAssembly.Memory,
+    boidCount: number,
+    setBoidCount: Dispatch<SetStateAction<number>>,
+    playing: boolean,
+    setPlaying: Dispatch<SetStateAction<boolean>>,
     attractionWeighting: number,
-    setAttractionWeighting: Dispatch<SetStateAction<number>>;
+    setAttractionWeighting: Dispatch<SetStateAction<number>>,
     alignmentWeighting: number,
-    setAlignmentWeighting: Dispatch<SetStateAction<number>>;
+    setAlignmentWeighting: Dispatch<SetStateAction<number>>,
     separationWeighting: number,
-    setSeparationWeighting: Dispatch<SetStateAction<number>>;
+    setSeparationWeighting: Dispatch<SetStateAction<number>>,
     attractionRadius: number,
-    setAttractionRadius: Dispatch<SetStateAction<number>>;
+    setAttractionRadius: Dispatch<SetStateAction<number>>,
     alignmentRadius: number,
-    setAlignmentRadius: Dispatch<SetStateAction<number>>;
+    setAlignmentRadius: Dispatch<SetStateAction<number>>,
     separationRadius: number,
-    setSeparationRadius: Dispatch<SetStateAction<number>>;
+    setSeparationRadius: Dispatch<SetStateAction<number>>,
+    maxVelocity: number,
+    setMaxVelocity: Dispatch<SetStateAction<number>>,
+    noise: number,
+    setNoise: Dispatch<SetStateAction<number>>,
 }
 
 const BoidsContext = createContext<BoidsContextType | null>(null);

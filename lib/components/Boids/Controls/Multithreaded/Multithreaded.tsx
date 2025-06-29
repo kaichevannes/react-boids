@@ -15,9 +15,17 @@ function Multithreaded() {
 
     if (multithreaded === null) return;
 
-    return <label>Multithreaded
-        <input type="checkbox" checked={multithreaded} onChange={e => setMultithreaded(e.target.checked)} />
-    </label>
+    return (
+        <div>
+            <label htmlFor="multithreaded">Multithreaded</label>
+            <input
+                id="multithreaded"
+                type="checkbox"
+                checked={multithreaded}
+                onChange={e => setMultithreaded(e.target.checked)}
+            />
+        </div>
+    )
 }
 
 export { Multithreaded }

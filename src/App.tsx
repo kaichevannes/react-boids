@@ -18,6 +18,9 @@ function App() {
                     <Boids.AttractionRadius />
                     <Boids.AlignmentRadius />
                     <Boids.SeparationRadius />
+                    <Boids.MaxVelocity />
+                    <Boids.Noise />
+                    <Boids.Algorithm />
                 </Boids.Controls>
             </Boids.Root>
         </div>

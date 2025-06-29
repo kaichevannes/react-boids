@@ -43,7 +43,7 @@ impl<T> Grid<T> for NaiveGrid<T>
 where
     T: Point + Clone + Send + Sync + 'static,
 {
-    fn prepare(&mut self, max_radius: f32) {}
+    fn prepare(&mut self, _max_radius: f32) {}
 
     fn insert(&mut self, point: T) {
         let (x, y) = point.xy();

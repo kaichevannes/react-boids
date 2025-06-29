@@ -10,13 +10,10 @@ import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from
 import { BoidsContext } from '../context';
 
 export function Root({ children, boidCount = 100 }: { children: ReactNode, boidCount: number }) {
-    // Initialisation
-    const [isReady, setIsReady] = useState(false);
     const wasmInitialised = useRef(false);
-    const universe = useRef<Universe | null>(null);
     const memory = useRef<WebAssembly.Memory | null>(null);
+    const [universe, setUniverse] = useState<Universe>();
     const [playing, setPlaying] = useState(true);
-    const [preset, setPreset] = useState(Preset.Basic);
     const [currentBoidCount, setCurrentBoidCount] = useState(boidCount);
     const [attractionWeighting, setAttractionWeighting] = useState(0);
     const [alignmentWeighting, setAlignmentWeighting] = useState(0);
@@ -24,6 +21,8 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
     const [attractionRadius, setAttractionRadius] = useState(0);
     const [alignmentRadius, setAlignmentRadius] = useState(0);
     const [separationRadius, setSeparationRadius] = useState(0);
+    const [maxVelocity, setMaxVelocity] = useState(0);
+    const [noise, setNoise] = useState(0);
 
     useEffect(() => {
         // This is to prevent the double call on `initThreadPool` in dev. Unsure how to do this
@@ -40,47 +39,49 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
             await initThreadPool(navigator.hardwareConcurrency);
             init_panic_hook();
 
-            universe.current = Builder.from_preset(preset)
+            const universe = Builder.from_preset(Preset.Basic)
                 .number_of_boids(boidCount)
                 .multithreaded(true)
-                .number_of_boids_per_thread(1000)
+                .number_of_boids_per_thread(200)
                 .build();
+            setUniverse(universe);
 
-            setAttractionWeighting(universe.current.get_attraction_weighting());
-            setAlignmentWeighting(universe.current.get_alignment_weighting());
-            setSeparationWeighting(universe.current.get_separation_weighting());
-            setAttractionRadius(universe.current.get_attraction_radius());
-            setAlignmentRadius(universe.current.get_alignment_radius());
-            setSeparationRadius(universe.current.get_separation_radius());
-
-            setIsReady(true);
+            // Required for initial render, unsure why the useEffect doesn't handle this.
+            setCurrentBoidCount(universe.get_number_of_boids());
+            setAttractionWeighting(universe.get_attraction_weighting());
+            setAlignmentWeighting(universe.get_alignment_weighting());
+            setSeparationWeighting(universe.get_separation_weighting());
+            setAttractionRadius(universe.get_attraction_radius());
+            setAlignmentRadius(universe.get_alignment_radius());
+            setSeparationRadius(universe.get_separation_radius());
+            setMaxVelocity(universe.get_maximum_velocity());
+            setNoise(universe.get_noise_fraction());
         })();
 
     }, []);
 
     useEffect(() => {
-        if (universe.current == null) {
+        if (!universe) {
             return;
         }
+        setCurrentBoidCount(universe.get_number_of_boids());
+        setAttractionWeighting(universe.get_attraction_weighting());
+        setAlignmentWeighting(universe.get_alignment_weighting());
+        setSeparationWeighting(universe.get_separation_weighting());
+        setAttractionRadius(universe.get_attraction_radius());
+        setAlignmentRadius(universe.get_alignment_radius());
+        setSeparationRadius(universe.get_separation_radius());
+        setMaxVelocity(universe.get_maximum_velocity());
+        setNoise(universe.get_noise_fraction());
+    }, [universe])
 
-        universe.current = Universe.build_from_preset(preset);
-        setCurrentBoidCount(universe.current.get_number_of_boids());
-        setAttractionWeighting(universe.current.get_attraction_weighting());
-        setAlignmentWeighting(universe.current.get_alignment_weighting());
-        setSeparationWeighting(universe.current.get_separation_weighting());
-        setAttractionRadius(universe.current.get_attraction_radius());
-        setAlignmentRadius(universe.current.get_alignment_radius());
-        setSeparationRadius(universe.current.get_separation_radius());
-
-    }, [preset])
-
-    if (!isReady) return;
+    if (!universe) return;
 
     return (
         <BoidsContext.Provider value={{
             // This will always be initialised since we guard above with the isReady flag.
-            universe: universe.current!,
-            setPreset,
+            universe,
+            setUniverse,
             memory: memory.current!,
             boidCount: currentBoidCount,
             setBoidCount: setCurrentBoidCount,
@@ -96,8 +97,12 @@ export function Root({ children, boidCount = 100 }: { children: ReactNode, boidC
             setAlignmentRadius,
             separationRadius,
             setSeparationRadius,
+            maxVelocity,
+            setMaxVelocity,
             playing,
             setPlaying,
+            noise,
+            setNoise,
         }}>
             {children}
         </BoidsContext.Provider>

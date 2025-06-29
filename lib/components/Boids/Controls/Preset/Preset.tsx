@@ -1,23 +1,24 @@
-import { Preset as BoidPreset } from "../../../../../wasm/pkg/wasm_boids";
+import { Preset as BoidPreset, Universe } from "../../../../../wasm/pkg/wasm_boids";
 import { useBoidsContext } from "../../context";
 
 function Preset() {
-    const { setPreset } = useBoidsContext();
+    const { setUniverse } = useBoidsContext();
 
     return (
-        <label>
-            Preset
+        <div>
+            <label htmlFor="preset"> Preset</label>
             <select
+                id="preset"
                 onChange={(e) => {
                     switch (e.target.value) {
                         case 'basic':
-                            setPreset(BoidPreset.Basic);
+                            setUniverse(Universe.build_from_preset(BoidPreset.Basic));
                             break;
                         case 'maruyama':
-                            setPreset(BoidPreset.Maruyama);
+                            setUniverse(Universe.build_from_preset(BoidPreset.Maruyama));
                             break;
                         case 'zhang':
-                            setPreset(BoidPreset.Zhang);
+                            setUniverse(Universe.build_from_preset(BoidPreset.Zhang));
                             break;
                         default:
                             throw new Error(`Preset ${e.target.value} not found.`);
@@ -28,7 +29,7 @@ function Preset() {
                 <option value="maruyama">Maruyama</option>
                 <option value="zhang">Zhang</option>
             </select>
-        </label >
+        </div>
     )
 }
 

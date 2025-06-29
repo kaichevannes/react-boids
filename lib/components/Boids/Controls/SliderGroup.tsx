@@ -12,11 +12,10 @@ const SliderGroup = ({ name, state, setState, min, max, step = 1 }:
     return (
         <div className={styles.SliderGroup}>
             <div className={styles.SliderGroupLabelWrapper}>
-                <label htmlFor={name}>{name}</label>
+                <span>{name}</span>
                 <span>{state}</span>
             </div>
             <Slider.Root
-                id={name}
                 className={styles.SliderRoot}
                 value={[state]}
                 onValueChange={([value]) => setState(value)}

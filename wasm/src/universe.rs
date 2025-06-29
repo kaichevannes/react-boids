@@ -1,12 +1,6 @@
 pub mod builder;
 
-use std::thread;
-
-use rayon::{
-    iter::{IndexedParallelIterator, IntoParallelIterator, ParallelIterator},
-    slice::ParallelSlice,
-};
-use web_sys::console;
+use rayon::iter::{IndexedParallelIterator, IntoParallelIterator, ParallelIterator};
 
 use crate::{
     boid::{Boid, Vec2},
@@ -175,6 +169,14 @@ impl Universe {
         self.boids_per_thread = boids_per_thread;
     }
 
+    pub fn set_maximum_velocity(&mut self, maximum_velocity: f32) {
+        self.maximum_velocity = maximum_velocity;
+    }
+
+    pub fn get_density(&self) -> f32 {
+        self.get_number_of_boids() as f32 / self.grid.get_size().powi(2)
+    }
+
     pub fn get_size(&self) -> f32 {
         self.grid.get_size()
     }
@@ -236,24 +238,34 @@ impl Universe {
         separation_weighting: f32,
         maximum_velocity: f32,
     ) -> Boid {
-        let noise_deduction = noise_fraction / 3.0;
         let noise_accelereation =
             Vec2(rng.random_range(-1.0..1.0), rng.random_range(-1.0..1.0)) * noise_fraction;
 
         let attraction_acceleration =
             Universe::attraction_acceleration(boid, grid, attraction_radius)
-                * (attraction_weighting - noise_deduction);
+                * (attraction_weighting - noise_fraction).max(0.0);
         let alignment_acceleration = Universe::alignment_acceleration(boid, grid, alignment_radius)
-            * (alignment_weighting - noise_deduction);
+            * (alignment_weighting - noise_fraction).max(0.0);
         let separation_acceleration =
             Universe::separation_acceleration(boid, grid, separation_radius)
-                * (separation_weighting - noise_deduction);
+                * (separation_weighting - noise_fraction).max(0.0);
 
-        let acceleration = boid.acceleration
-            + attraction_acceleration
-            + alignment_acceleration
-            + separation_acceleration
-            + noise_accelereation;
+        let acceleration = {
+            let raw_acceleration = boid.acceleration
+                + attraction_acceleration
+                + alignment_acceleration
+                + separation_acceleration
+                + noise_accelereation;
+            let speed = raw_acceleration.magnitude();
+
+            if speed < 1.0 {
+                raw_acceleration
+            } else if speed > 0.0 {
+                raw_acceleration / speed * maximum_velocity
+            } else {
+                Vec2(0.0, 0.0)
+            }
+        };
 
         let velocity = {
             let raw_velocity = boid.velocity + acceleration;
