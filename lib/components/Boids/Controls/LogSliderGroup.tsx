@@ -5,13 +5,13 @@ import {
 import { Slider } from 'radix-ui';
 import styles from './styles.module.css';
 
-const LogSliderGroup = ({ name, state, setState, min, max, decimals = false }:
-    { name: string, state: number, setState: Dispatch<SetStateAction<number>>, min: number, max: number, decimals?: boolean }
+const LogSliderGroup = ({ className, name, state, setState, min, max, decimals = false }:
+    { className?: string, name: string, state: number, setState: Dispatch<SetStateAction<number>>, min: number, max: number, decimals?: boolean }
 ) => {
     const logMin = Math.log(min);
     const logMax = Math.log(max);
     return (
-        <div className={styles.SliderGroup}>
+        <div className={`${styles.SliderGroup} ${className}`}>
             <div className={styles.SliderGroupLabelWrapper}>
                 <span>{name}</span>
                 <span>{state}</span>

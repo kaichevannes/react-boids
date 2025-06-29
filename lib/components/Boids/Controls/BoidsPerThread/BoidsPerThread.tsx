@@ -1,21 +1,18 @@
 import {
     useEffect,
-    useState,
 } from 'react';
 
 import { useBoidsContext } from "../../context";
 import { LogSliderGroup } from '../LogSliderGroup';
 
-function BoidsPerThread() {
-    const { universe } = useBoidsContext();
-
-    const [boidsPerThread, setBoidsPerThread] = useState(universe.get_boids_per_thread());
+function BoidsPerThread({ className }: { className?: string }) {
+    const { universe, boidsPerThread, setBoidsPerThread, countLimited } = useBoidsContext();
 
     useEffect(() => {
         universe.set_boids_per_thread(boidsPerThread);
     }, [boidsPerThread])
 
-    return <LogSliderGroup name="Boids per Thread" state={boidsPerThread} setState={setBoidsPerThread} min={1} max={50000} />
+    return <LogSliderGroup className={`${className} ?? ''`} name="Boids per Thread" state={boidsPerThread} setState={setBoidsPerThread} min={1} max={countLimited ? 4000 : 50000} />
 };
 
 export { BoidsPerThread }

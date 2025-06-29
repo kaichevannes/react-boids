@@ -1,11 +1,11 @@
 import { Builder } from "../../../../../wasm/pkg/wasm_boids";
 import { useBoidsContext } from "../../context";
 
-function Algorithm() {
+function Algorithm({ className }: { className?: string }) {
     const { universe, setUniverse } = useBoidsContext();
 
     return (
-        <div>
+        <div className={`${className ?? ''}`}>
             <label htmlFor="algorithm"> Algorithm </label>
             <select
                 id="algorithm"
@@ -40,7 +40,7 @@ function Algorithm() {
                 <option value="naive">Naive</option>
                 <option value="tiled">Tiled</option>
             </select>
-        </div >
+        </ div >
     )
 }
 

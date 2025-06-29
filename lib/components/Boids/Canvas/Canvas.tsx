@@ -7,7 +7,7 @@ import {
 import styles from './styles.module.css';
 import { useBoidsContext } from '../context';
 
-function Canvas() {
+function Canvas({ className }: { className?: string }) {
     const { universe, memory, playing } = useBoidsContext();
     // Canvas
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -135,15 +135,9 @@ function Canvas() {
     }
 
     return (
-        <>
-            <div className={styles.canvasWrapper}>
-                <canvas className={styles.canvas} ref={canvasRef} />
-            </div>
-            {/* <button onClick={() => { */}
-            {/*     universe.tick(); */}
-            {/*     requestAnimationFrame(render); */}
-            {/* }}>Tick</button> */}
-        </>
+        <div className={`${styles.canvasWrapper} ${className ?? ''}`}>
+            <canvas className={styles.canvas} ref={canvasRef} />
+        </div>
     )
 }
 

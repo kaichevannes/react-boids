@@ -24,6 +24,8 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
     const [maxVelocity, setMaxVelocity] = useState(0);
     const [noise, setNoise] = useState(0);
     const [density, setDensity] = useState(0);
+    const [boidsPerThread, setBoidsPerThread] = useState(0);
+    const [countLimited, setCountLimited] = useState(true);
 
     useEffect(() => {
         // This is to prevent the double call on `initThreadPool` in dev. Unsure how to do this
@@ -48,6 +50,7 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
             setUniverse(universe);
 
             // Required for initial render, unsure why the useEffect doesn't handle this.
+            // Remember to update below in universe change useEffect.
             setCurrentBoidCount(universe.get_number_of_boids());
             setAttractionWeighting(universe.get_attraction_weighting());
             setAlignmentWeighting(universe.get_alignment_weighting());
@@ -58,6 +61,7 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
             setMaxVelocity(universe.get_maximum_velocity());
             setNoise(universe.get_noise_fraction());
             setDensity(universe.get_density());
+            setBoidsPerThread(universe.get_boids_per_thread());
         })();
 
     }, []);
@@ -66,6 +70,7 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
         if (!universe) {
             return;
         }
+        // Remember to update above in init useEffect
         setCurrentBoidCount(universe.get_number_of_boids());
         setAttractionWeighting(universe.get_attraction_weighting());
         setAlignmentWeighting(universe.get_alignment_weighting());
@@ -76,6 +81,7 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
         setMaxVelocity(universe.get_maximum_velocity());
         setNoise(universe.get_noise_fraction());
         setDensity(universe.get_density());
+        setBoidsPerThread(universe.get_boids_per_thread());
     }, [universe])
 
     if (!universe) return;
@@ -107,7 +113,11 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
             noise,
             setNoise,
             density,
-            setDensity
+            setDensity,
+            boidsPerThread,
+            setBoidsPerThread,
+            countLimited,
+            setCountLimited,
         }}>
             {children}
         </BoidsContext.Provider>

@@ -5,7 +5,7 @@ import {
 import { useBoidsContext } from "../../context";
 import { LogSliderGroup } from '../LogSliderGroup';
 
-function Density() {
+function Density({ className }: { className?: string }) {
     const { universe, density, setDensity } = useBoidsContext();
 
     useEffect(() => {
@@ -13,6 +13,7 @@ function Density() {
     }, [density])
 
     return <LogSliderGroup
+        className={`${className ?? ''}`}
         name="Density"
         state={Math.round(density * 100) / 100}
         setState={setDensity}

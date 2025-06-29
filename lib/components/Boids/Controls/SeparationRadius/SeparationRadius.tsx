@@ -7,7 +7,7 @@ import { useBoidsContext } from "../../context";
 import { PercentSliderGroup } from '../PercentageSliderGroup';
 import { useDebounce } from 'use-debounce';
 
-function SeparationRadius() {
+function SeparationRadius({ className }: { className?: string }) {
     const { universe, separationRadius, setSeparationRadius } = useBoidsContext();
     const grid_size = universe.get_size();
     const [percentageSeparationRadius, setPercentageSeparationRadius] = useState(Math.trunc(100 * separationRadius / grid_size));
@@ -24,6 +24,7 @@ function SeparationRadius() {
 
 
     return <PercentSliderGroup
+        className={`${className ?? ''}`}
         name="Separation Radius"
         state={percentageSeparationRadius}
         setState={setPercentageSeparationRadius}

@@ -1,11 +1,11 @@
 import { Preset as BoidPreset, Universe } from "../../../../../wasm/pkg/wasm_boids";
 import { useBoidsContext } from "../../context";
 
-function Preset() {
+function Preset({ className }: { className?: string }) {
     const { setUniverse } = useBoidsContext();
 
     return (
-        <div>
+        <div className={`${className ?? ''}`}>
             <label htmlFor="preset"> Preset</label>
             <select
                 id="preset"

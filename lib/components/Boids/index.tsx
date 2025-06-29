@@ -16,6 +16,7 @@ import { MaxVelocity } from './Controls/MaxVelocity/MaxVelocity.tsx';
 import { Noise } from './Controls/Noise/Noise.tsx';
 import { Algorithm } from './Controls/Algorithm/Algorithm.tsx';
 import { Density } from './Controls/Density/Density.tsx';
+import { CountLimiter } from './Controls/CountLimiter/CountLimiter.tsx';
 
 export const Boids = {
     Root,
@@ -36,4 +37,5 @@ export const Boids = {
     Noise,
     Algorithm,
     Density,
+    CountLimiter,
 };

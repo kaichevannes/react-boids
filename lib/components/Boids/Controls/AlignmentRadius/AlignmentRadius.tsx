@@ -7,7 +7,7 @@ import { useBoidsContext } from "../../context";
 import { PercentSliderGroup } from '../PercentageSliderGroup';
 import { useDebounce } from 'use-debounce';
 
-function AlignmentRadius() {
+function AlignmentRadius({ className }: { className?: string }) {
     const { universe, alignmentRadius, setAlignmentRadius } = useBoidsContext();
     const grid_size = universe.get_size();
     const [percentageAlignmentRadius, setPercentageAlignmentRadius] = useState(Math.trunc(100 * alignmentRadius / grid_size));
@@ -24,6 +24,7 @@ function AlignmentRadius() {
 
 
     return <PercentSliderGroup
+        className={`${className ?? ''}`}
         name="Alignment Radius"
         state={percentageAlignmentRadius}
         setState={setPercentageAlignmentRadius}

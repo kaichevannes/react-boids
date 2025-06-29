@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useBoidsContext } from "../../context";
 
-function Multithreaded() {
+function Multithreaded({ className }: { className?: string }) {
     const { universe } = useBoidsContext();
     const [multithreaded, setMultithreaded] = useState<boolean>(() => universe.get_multithreaded());
 
@@ -16,7 +16,7 @@ function Multithreaded() {
     if (multithreaded === null) return;
 
     return (
-        <div>
+        <div className={`${className ?? ''}`}>
             <label htmlFor="multithreaded">Multithreaded</label>
             <input
                 id="multithreaded"

@@ -6,11 +6,11 @@ import { Slider } from 'radix-ui';
 
 import styles from './styles.module.css';
 
-const SliderGroup = ({ name, state, setState, min, max, step = 1 }:
-    { name: string, state: number, setState: Dispatch<SetStateAction<number>>, min: number, max: number, step?: number }
+const SliderGroup = ({ name, state, setState, min, max, step = 1, className }:
+    { name: string, state: number, setState: Dispatch<SetStateAction<number>>, min: number, max: number, step?: number, className?: string }
 ) => {
     return (
-        <div className={styles.SliderGroup}>
+        <div className={`${styles.SliderGroup} ${className}`}>
             <div className={styles.SliderGroupLabelWrapper}>
                 <span>{name}</span>
                 <span>{state}</span>

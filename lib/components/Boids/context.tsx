@@ -27,6 +27,10 @@ type BoidsContextType = {
     setNoise: Dispatch<SetStateAction<number>>,
     density: number,
     setDensity: Dispatch<SetStateAction<number>>,
+    boidsPerThread: number,
+    setBoidsPerThread: Dispatch<SetStateAction<number>>,
+    countLimited: boolean,
+    setCountLimited: Dispatch<SetStateAction<boolean>>,
 }
 
 const BoidsContext = createContext<BoidsContextType | null>(null);

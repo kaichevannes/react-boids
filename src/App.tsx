@@ -22,6 +22,7 @@ function App() {
                     <Boids.Noise />
                     <Boids.Algorithm />
                     <Boids.Density />
+                    <Boids.CountLimiter />
                 </Boids.Controls>
             </Boids.Root>
         </div>

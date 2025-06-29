@@ -5,11 +5,11 @@ import {
 import { Slider } from 'radix-ui';
 import styles from './styles.module.css';
 
-const PercentSliderGroup = ({ name, state, setState }:
-    { name: string, state: number, setState: Dispatch<SetStateAction<number>> }
+const PercentSliderGroup = ({ name, state, setState, className }:
+    { className?: string, name: string, state: number, setState: Dispatch<SetStateAction<number>> }
 ) => {
     return (
-        <div className={styles.SliderGroup}>
+        <div className={`${styles.SliderGroup} ${className}`}>
             <div className={styles.SliderGroupLabelWrapper}>
                 <span>{name}</span>
                 <span>{state}</span>
