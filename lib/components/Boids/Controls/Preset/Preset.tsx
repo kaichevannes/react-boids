@@ -1,4 +1,4 @@
-import { Preset as BoidPreset, Universe } from '../../../../../wasm/pkg/wasm_boids';
+import { Preset as BoidPreset, Universe } from '../../../../../wasm/pkg/wasm_boids.js';
 import { useBoidsContext } from "../../context";
 
 function Preset({ className }: { className?: string }) {
