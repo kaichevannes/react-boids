@@ -57,7 +57,7 @@
     height: 20px;
     background-color: var(--color-background, var(--default-color-background));
     border-radius: 10px;
-    box-shadow: 0 0 0 3px var(--color-grey300, var(--default-color-grey300));
+    box-shadow: 0 2px 8px var(--color-grey300, var(--default-color-grey300));
 }
 
 .SliderThumb:hover {
