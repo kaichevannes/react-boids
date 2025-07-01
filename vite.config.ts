@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 import { libInjectCss } from 'vite-plugin-lib-inject-css'
 import { resolve } from 'path'
+// import wasm from "vite-plugin-wasm";
+// import topLevelAwait from "vite-plugin-top-level-await";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,6 +15,8 @@ export default defineConfig({
         dts({
             tsconfigPath: resolve(__dirname, "tsconfig.lib.json"),
         }),
+        // wasm(),
+        // topLevelAwait(),
     ],
     server: {
         headers: {
@@ -25,6 +29,7 @@ export default defineConfig({
             entry: resolve(__dirname, 'lib/main.ts'),
             formats: ['es']
         },
+        minify: false,
         rollupOptions: {
             external: ['react', 'react/jsx-runtime'],
             output: {

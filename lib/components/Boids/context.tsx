@@ -1,9 +1,8 @@
-import type { Universe } from '../../../wasm/pkg/wasm_boids.js';
 import { createContext, useContext, type Dispatch, type SetStateAction } from 'react';
 
 type BoidsContextType = {
-    universe: Universe,
-    setUniverse: Dispatch<SetStateAction<Universe | undefined>>,
+    universe: any,
+    setUniverse: Dispatch<SetStateAction<any | undefined>>,
     memory: WebAssembly.Memory,
     boidCount: number,
     setBoidCount: Dispatch<SetStateAction<number>>,

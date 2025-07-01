@@ -5,15 +5,13 @@ import {
     useState
 } from 'react'
 
-import wasmUrl from '../../../../wasm/pkg/wasm_boids_bg.wasm?url';
-import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from '../../../../wasm/pkg/wasm_boids.js'
-
 import { BoidsContext } from '../context';
+import { useWasmBoids } from '../useWasmBoids';
 
 export function Root({ children, boidCount = 500 }: { children: ReactNode, boidCount?: number }) {
-    const wasmInitialised = useRef(false);
+    const { ready, Builder, Preset } = useWasmBoids();
     const memory = useRef<WebAssembly.Memory | null>(null);
-    const [universe, setUniverse] = useState<Universe>();
+    const [universe, setUniverse] = useState<any>();
     const [playing, setPlaying] = useState(true);
     const [currentBoidCount, setCurrentBoidCount] = useState(boidCount);
     const [attractionWeighting, setAttractionWeighting] = useState(0);
@@ -29,43 +27,31 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
     const [countLimited, setCountLimited] = useState(true);
 
     useEffect(() => {
-        // This is to prevent the double call on `initThreadPool` in dev. Unsure how to do this
-        // better. If `initThreadPool` is called twice then we get a crash and can no longer
-        // access WASM linear memory.
-        if (wasmInitialised.current) {
+        if (!ready) {
             return;
         }
-        wasmInitialised.current = true;
 
-        (async () => {
-            let wasm = await init(wasmUrl);
-            memory.current = wasm.memory;
-            await initThreadPool(navigator.hardwareConcurrency);
-            init_panic_hook();
+        const universe = Builder.from_preset(Preset.Basic)
+            .number_of_boids(boidCount)
+            .multithreaded(true)
+            .number_of_boids_per_thread(200)
+            .build();
+        setUniverse(universe);
 
-            const universe = Builder.from_preset(Preset.Basic)
-                .number_of_boids(boidCount)
-                .multithreaded(true)
-                .number_of_boids_per_thread(200)
-                .build();
-            setUniverse(universe);
-
-            // Required for initial render, unsure why the useEffect doesn't handle this.
-            // Remember to update below in universe change useEffect.
-            setCurrentBoidCount(universe.get_number_of_boids());
-            setAttractionWeighting(universe.get_attraction_weighting());
-            setAlignmentWeighting(universe.get_alignment_weighting());
-            setSeparationWeighting(universe.get_separation_weighting());
-            setAttractionRadius(universe.get_attraction_radius());
-            setAlignmentRadius(universe.get_alignment_radius());
-            setSeparationRadius(universe.get_separation_radius());
-            setMaxVelocity(universe.get_maximum_velocity());
-            setNoise(universe.get_noise_fraction());
-            setDensity(universe.get_density());
-            setBoidsPerThread(universe.get_boids_per_thread());
-        })();
-
-    }, []);
+        // Required for initial render, unsure why the useEffect doesn't handle this.
+        // Remember to update below in universe change useEffect.
+        setCurrentBoidCount(universe.get_number_of_boids());
+        setAttractionWeighting(universe.get_attraction_weighting());
+        setAlignmentWeighting(universe.get_alignment_weighting());
+        setSeparationWeighting(universe.get_separation_weighting());
+        setAttractionRadius(universe.get_attraction_radius());
+        setAlignmentRadius(universe.get_alignment_radius());
+        setSeparationRadius(universe.get_separation_radius());
+        setMaxVelocity(universe.get_maximum_velocity());
+        setNoise(universe.get_noise_fraction());
+        setDensity(universe.get_density());
+        setBoidsPerThread(universe.get_boids_per_thread());
+    }, [ready]);
 
     useEffect(() => {
         if (!universe) {

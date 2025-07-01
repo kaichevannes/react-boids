@@ -1,7 +1,8 @@
-import { Builder } from "../../../../../wasm/pkg/wasm_boids.js";
 import { useBoidsContext } from "../../context";
+import { useWasmBoids } from "../../useWasmBoids";
 
 function Algorithm({ className }: { className?: string }) {
+    const { Builder } = useWasmBoids();
     const { universe, setUniverse } = useBoidsContext();
 
     return (
