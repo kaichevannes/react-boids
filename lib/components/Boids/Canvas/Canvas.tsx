@@ -7,11 +7,11 @@ import {
 import styles from './styles.module.css';
 import { useBoidsContext } from '../context';
 
-function Canvas({ className }: { className?: string }) {
+function Canvas({ className, size = 500 }: { className?: string, size?: number }) {
     const { universe, memory, playing } = useBoidsContext();
     // Canvas
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [canvasSize, setCanvasSize] = useState(500);
+    const [canvasSize, setCanvasSize] = useState(size);
 
     // UI
     const playAnimationRef = useRef(playing);

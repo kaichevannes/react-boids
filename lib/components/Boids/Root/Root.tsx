@@ -6,7 +6,8 @@ import {
 } from 'react'
 
 import wasmUrl from '../../../../wasm/pkg/wasm_boids_bg.wasm?url';
-import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from '../../../../wasm/pkg/wasm_boids.js'
+// import init, { initThreadPool, init_panic_hook, Universe, Builder, Preset } from '../../../../wasm/pkg/wasm_boids.js'
+import init, { init_panic_hook, Universe, Builder, Preset } from '../../../../wasm/pkg/wasm_boids.js'
 
 import { BoidsContext } from '../context';
 
@@ -40,7 +41,7 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
         (async () => {
             let wasm = await init(wasmUrl);
             memory.current = wasm.memory;
-            await initThreadPool(navigator.hardwareConcurrency);
+            // await initThreadPool(navigator.hardwareConcurrency);
             init_panic_hook();
 
             const universe = Builder.from_preset(Preset.Basic)
