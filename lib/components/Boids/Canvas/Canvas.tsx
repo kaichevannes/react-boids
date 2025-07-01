@@ -138,7 +138,7 @@ function Canvas({ className, width = 500, height = 500 }: { className?: string, 
     }
 
     return (
-        <canvas className={styles.canvas} ref={canvasRef} />
+        <canvas className={`${styles.canvas} ${className ?? ''}`} ref={canvasRef} />
     )
 }
 
