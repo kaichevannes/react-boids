@@ -7,11 +7,12 @@ import {
 import styles from './styles.module.css';
 import { useBoidsContext } from '../context';
 
-function Canvas({ className, size = 500 }: { className?: string, size?: number }) {
+function Canvas({ className, width = 500, height = 500 }: { className?: string, width?: number, height?: number }) {
     const { universe, memory, playing } = useBoidsContext();
     // Canvas
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [canvasSize, setCanvasSize] = useState(size);
+    const [canvasWidth, setCanvasWidth] = useState(width);
+    const [canvasHeight, setCanvasHeight] = useState(height);
 
     // UI
     const playAnimationRef = useRef(playing);
@@ -28,12 +29,13 @@ function Canvas({ className, size = 500 }: { className?: string, size?: number }
         if (!canvas) return;
 
         const observer = new ResizeObserver(() => {
-            setCanvasSize(canvas.clientWidth);
+            setCanvasWidth(canvas.clientWidth);
+            setCanvasHeight(canvas.clientHeight);
         });
         observer.observe(canvas);
 
-        canvas.width = canvasSize;
-        canvas.height = canvasSize;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
 
         requestAnimationFrame(render)
     }, []);
@@ -83,22 +85,23 @@ function Canvas({ className, size = 500 }: { className?: string, size?: number }
             boids.push(boid);
         }
 
-        const size = canvasSize;
+        const width = canvasWidth;
+        const height = canvasHeight;
         const ctx = canvasRef.current.getContext("2d");
 
         if (!ctx) {
             return;
         }
 
-        ctx.clearRect(0, 0, size, size);
+        ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim();
-        ctx.fillRect(0, 0, size, size);
+        ctx.fillRect(0, 0, width, height);
         ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
         const universeSize = universeRef.current.get_size();
-        const triangleSize = size / 100;
+        const triangleSize = width / 100;
         boids.forEach((b) => {
-            let x = (b.x / universeSize) * size;
-            let y = (b.y / universeSize) * size;
+            let x = (b.x / universeSize) * width;
+            let y = (b.y / universeSize) * height;
             const angle = Math.atan2(b.vy, b.vx);
 
             ctx.setTransform(
@@ -123,7 +126,7 @@ function Canvas({ className, size = 500 }: { className?: string, size?: number }
         const instantaneous_fps = 1000 / delta;
         ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
         ctx.font = "16px monospace";
-        ctx.fillText(`FPS: ${Math.trunc(instantaneous_fps)}`, size - 76, 16);
+        ctx.fillText(`FPS: ${Math.trunc(instantaneous_fps)}`, width - 76, 16);
 
         // const start = performance.now();
         universeRef.current.tick();
