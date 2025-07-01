@@ -138,9 +138,7 @@ function Canvas({ className, width = 500, height = 500 }: { className?: string, 
     }
 
     return (
-        <div className={`${styles.canvasWrapper} ${className ?? ''}`}>
-            <canvas className={styles.canvas} ref={canvasRef} />
-        </div>
+        <canvas className={styles.canvas} ref={canvasRef} />
     )
 }
 
