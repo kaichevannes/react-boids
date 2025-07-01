@@ -16,6 +16,7 @@
 .SliderRoot {
     --default-color-text: hsl(0deg 0% 20%);
     --default-color-primary: rgba(25, 26, 26, 0.5);
+    --default-color-grey300: hsl(55deg 8% 40%);
     --default-color-background: hsl(0deg 0% 90%);
     --default-color-shadow: hsl(0deg 0% 50%);
     position: relative;
@@ -44,9 +45,10 @@
     position: absolute;
     background-color: var(--color-background, var(--default-color-background));
     border-radius: 100vmax;
+    filter: opacity(0.5);
     height: 100%;
     /* To fix half subpixel clipping on the edges. */
-    box-shadow: 0 0 0 1px white;
+    box-shadow: 0 0 0 1px var(--color-background, var(--default-color-background));
 }
 
 .SliderThumb {
@@ -55,6 +57,7 @@
     height: 20px;
     background-color: var(--color-background, var(--default-color-background));
     border-radius: 10px;
+    box-shadow: 0 0 0 3px var(--color-grey300, var(--default-color-grey300));
 }
 
 .SliderThumb:hover {
