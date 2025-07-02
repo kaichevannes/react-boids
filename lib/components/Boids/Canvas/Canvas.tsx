@@ -1,6 +1,5 @@
 import {
     useRef,
-    useState,
     useEffect,
 } from 'react';
 
@@ -11,8 +10,6 @@ function Canvas({ className, width = 500, height = 500 }: { className?: string, 
     const { universe, memory, playing, fps } = useBoidsContext();
     // Canvas
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [canvasWidth, setCanvasWidth] = useState(width);
-    const [canvasHeight, setCanvasHeight] = useState(height);
 
     // Refs to keep up to date inside canvas render
     const playAnimationRef = useRef(playing);
@@ -32,14 +29,8 @@ function Canvas({ className, width = 500, height = 500 }: { className?: string, 
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const observer = new ResizeObserver(() => {
-            setCanvasWidth(canvas.clientWidth);
-            setCanvasHeight(canvas.clientHeight);
-        });
-        observer.observe(canvas);
-
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
+        canvas.width = width;
+        canvas.height = height;
 
         requestAnimationFrame(render)
     }, []);
@@ -47,11 +38,6 @@ function Canvas({ className, width = 500, height = 500 }: { className?: string, 
     useEffect(() => {
         playAnimationRef.current = playing;
         if (playing) {
-            const canvas = canvasRef.current;
-            if (canvas) {
-                canvas.width = canvasWidth;
-                canvas.height = canvasHeight;
-            }
             requestAnimationFrame(render);
         }
     }, [playing]);
@@ -94,8 +80,8 @@ function Canvas({ className, width = 500, height = 500 }: { className?: string, 
             boids.push(boid);
         }
 
-        const width = canvasWidth;
-        const height = canvasHeight;
+        const width = canvasRef.current.width;
+        const height = canvasRef.current.height;
         const ctx = canvasRef.current.getContext("2d");
 
         if (!ctx) {
