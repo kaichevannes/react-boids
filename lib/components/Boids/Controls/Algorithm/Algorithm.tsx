@@ -37,8 +37,8 @@ function Algorithm({ className }: { className?: string }) {
                     }
                 }}
             >
-                <option value="naive">Naive</option>
                 <option value="tiled">Tiled</option>
+                <option value="naive">Naive</option>
             </select>
         </ div >
     )
