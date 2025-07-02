@@ -28,6 +28,7 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
     const [density, setDensity] = useState(0);
     const [boidsPerThread, setBoidsPerThread] = useState(0);
     const [countLimited, setCountLimited] = useState(true);
+    const [fps, setFps] = useState(false);
 
     useEffect(() => {
         // This is to prevent the double call on `initThreadPool` in dev. Unsure how to do this
@@ -120,6 +121,8 @@ export function Root({ children, boidCount = 500 }: { children: ReactNode, boidC
             setBoidsPerThread,
             countLimited,
             setCountLimited,
+            fps,
+            setFps,
         }}>
             {children}
         </BoidsContext.Provider>

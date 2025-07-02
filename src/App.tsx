@@ -23,6 +23,7 @@ function App() {
                     <Boids.Algorithm />
                     <Boids.Density />
                     <Boids.CountLimiter />
+                    <Boids.Fps />
                 </Boids.Controls>
             </Boids.Root>
         </div>

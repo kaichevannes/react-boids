@@ -31,6 +31,8 @@ type BoidsContextType = {
     setBoidsPerThread: Dispatch<SetStateAction<number>>,
     countLimited: boolean,
     setCountLimited: Dispatch<SetStateAction<boolean>>,
+    fps: boolean,
+    setFps: Dispatch<SetStateAction<boolean>>,
 }
 
 const BoidsContext = createContext<BoidsContextType | null>(null);

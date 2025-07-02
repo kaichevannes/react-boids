@@ -17,6 +17,7 @@ import { Noise } from './Controls/Noise/Noise.tsx';
 import { Algorithm } from './Controls/Algorithm/Algorithm.tsx';
 import { Density } from './Controls/Density/Density.tsx';
 import { CountLimiter } from './Controls/CountLimiter/CountLimiter.tsx';
+import { Fps } from './Controls/Fps/Fps.tsx';
 
 export const Boids = {
     Root,
@@ -38,4 +39,5 @@ export const Boids = {
     Algorithm,
     Density,
     CountLimiter,
+    Fps,
 };

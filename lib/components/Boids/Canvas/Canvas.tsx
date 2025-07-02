@@ -8,17 +8,21 @@ import styles from './styles.module.css';
 import { useBoidsContext } from '../context';
 
 function Canvas({ className, width = 500, height = 500 }: { className?: string, width?: number, height?: number }) {
-    const { universe, memory, playing } = useBoidsContext();
+    const { universe, memory, playing, fps } = useBoidsContext();
     // Canvas
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [canvasWidth, setCanvasWidth] = useState(width);
     const [canvasHeight, setCanvasHeight] = useState(height);
 
-    // UI
+    // Refs to keep up to date inside canvas render
     const playAnimationRef = useRef(playing);
-
-    // Universe ref to keep it up to date
     const universeRef = useRef(universe);
+    const fpsRef = useRef(fps);
+
+    useEffect(() => {
+        console.log(fps);
+        fpsRef.current = fps;
+    }, [fps])
 
     useEffect(() => {
         universeRef.current = universe;
@@ -43,6 +47,11 @@ function Canvas({ className, width = 500, height = 500 }: { className?: string, 
     useEffect(() => {
         playAnimationRef.current = playing;
         if (playing) {
+            const canvas = canvasRef.current;
+            if (canvas) {
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+            }
             requestAnimationFrame(render);
         }
     }, [playing]);
@@ -123,10 +132,12 @@ function Canvas({ className, width = 500, height = 500 }: { className?: string, 
         });
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-        const instantaneous_fps = 1000 / delta;
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
-        ctx.font = "16px monospace";
-        ctx.fillText(`FPS: ${Math.trunc(instantaneous_fps)}`, width - 76, 16);
+        if (fpsRef.current === true) {
+            const instantaneous_fps = 1000 / delta;
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+            ctx.font = "16px monospace";
+            ctx.fillText(`FPS: ${Math.trunc(instantaneous_fps)}`, width - 76, 16);
+        }
 
         // const start = performance.now();
         universeRef.current.tick();
