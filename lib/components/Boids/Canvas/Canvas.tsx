@@ -121,8 +121,8 @@ function Canvas({ className, width = 500, height = 500 }: { className?: string, 
         if (fpsRef.current === true) {
             const instantaneous_fps = 1000 / delta;
             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
-            ctx.font = "16px monospace";
-            ctx.fillText(`FPS: ${Math.trunc(instantaneous_fps)}`, width - 76, 16);
+            ctx.font = "20px monospace";
+            ctx.fillText(`FPS: ${Math.trunc(instantaneous_fps)}`, width - 94, 20);
         }
 
         // const start = performance.now();

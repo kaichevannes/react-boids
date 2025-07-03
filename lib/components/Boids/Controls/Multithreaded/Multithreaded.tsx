@@ -17,7 +17,7 @@ function Multithreaded({ className }: { className?: string }) {
 
     return (
         <div className={`${className ?? ''}`}>
-            <label htmlFor="multithreaded">Multithreaded</label>
+            <label htmlFor="multithreaded">{`Multithreaded (${navigator.hardwareConcurrency} cores)`}</label>
             <input
                 id="multithreaded"
                 type="checkbox"
